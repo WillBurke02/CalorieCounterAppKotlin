@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CalorieCounterAppKotlin</string>
+    <string name="total_calories">Total Calories</string>
+</resources>
