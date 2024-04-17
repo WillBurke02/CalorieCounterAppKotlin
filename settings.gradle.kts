@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "CalorieCounterAppKotlin"
 include(":app")
- 
+

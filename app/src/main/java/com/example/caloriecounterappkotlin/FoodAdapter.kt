@@ -13,7 +13,6 @@ class FoodAdapter(private val foods: ArrayList<Foods>) :
     class FoodHolder(view: View) : RecyclerView.ViewHolder(view) {
         val label : TextView = view.findViewById(R.id.label)
         val calories : TextView = view.findViewById(R.id.calories)
-        val type : TextView = view.findViewById(R.id.type)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodHolder {
