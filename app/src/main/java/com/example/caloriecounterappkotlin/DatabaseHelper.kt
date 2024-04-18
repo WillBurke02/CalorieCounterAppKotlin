@@ -1,9 +1,10 @@
+package com.example.caloriecounterappkotlin
+
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.caloriecounterappkotlin.Foods
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -18,7 +19,7 @@ class DatabaseHelper(context: Context) :
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        val CREATE_FOODS_TABLE = ("CREATE TABLE $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY, $COLUMN_LABEL TEXT, $COLUMN_CALORIES REAL)")
+        val CREATE_FOODS_TABLE = "CREATE TABLE $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_LABEL TEXT, $COLUMN_CALORIES REAL)"
         db.execSQL(CREATE_FOODS_TABLE)
     }
 
@@ -46,9 +47,10 @@ class DatabaseHelper(context: Context) :
         cursor?.let {
             if (it.moveToFirst()) {
                 do {
+                    val id = it.getLong(it.getColumnIndex(COLUMN_ID))
                     val label = it.getString(it.getColumnIndex(COLUMN_LABEL))
                     val calories = it.getDouble(it.getColumnIndex(COLUMN_CALORIES))
-                    val food = Foods(label, calories)
+                    val food = Foods(id, label, calories, " ")
                     foods.add(food)
                 } while (it.moveToNext())
             }
@@ -58,4 +60,24 @@ class DatabaseHelper(context: Context) :
         db.close()
         return foods
     }
+
+    fun updateFood(food: Foods): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_LABEL, food.label)
+            put(COLUMN_CALORIES, food.calories)
+        }
+        val updatedRows = db.update(TABLE_NAME, values, "$COLUMN_ID = ?", arrayOf(food.id.toString()))
+        db.close()
+        return updatedRows > 0
+    }
+
+
+    fun deleteFood(food: Foods): Boolean {
+        val db = this.writableDatabase
+        val deletedRows = db.delete(TABLE_NAME, "$COLUMN_ID = ?", arrayOf(food.id.toString()))
+        db.close()
+        return deletedRows > 0
+    }
 }
+

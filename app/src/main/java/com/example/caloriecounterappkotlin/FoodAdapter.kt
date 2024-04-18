@@ -1,5 +1,6 @@
 package com.example.caloriecounterappkotlin
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 
 class FoodAdapter(private val foods: ArrayList<Foods>) :
     RecyclerView.Adapter<FoodAdapter.FoodHolder>() {
+
+    // Define a listener interface
+    interface OnFoodItemClickListener {
+        fun onFoodItemClick(food: Foods)
+    }
+
+    // Define a listener variable
+    private var onFoodItemClickListener: OnFoodItemClickListener? = null
+
+    // Function to set the listener
+    fun setOnItemClickListener(listener: OnFoodItemClickListener) {
+        onFoodItemClickListener = listener
+    }
 
     class FoodHolder(view: View) : RecyclerView.ViewHolder(view) {
         val label : TextView = view.findViewById(R.id.label)
@@ -29,6 +43,13 @@ class FoodAdapter(private val foods: ArrayList<Foods>) :
         holder.calories.setTextColor(ContextCompat.getColor(context, R.color.green))
 
         holder.label.text = food.label
+
+        holder.itemView.setOnClickListener {
+            // Check if the listener is set
+            onFoodItemClickListener?.let {
+                it.onFoodItemClick(food)
+            }
+        }
     }
 
     override fun getItemCount(): Int {

@@ -1,16 +1,14 @@
 package com.example.caloriecounterappkotlin
 
-import DatabaseHelper
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton // Import FloatingActionButton
 
 class AddFoodActivity : AppCompatActivity() {
     private lateinit var labelInput: EditText
@@ -33,11 +31,11 @@ class AddFoodActivity : AppCompatActivity() {
         closeBtn = findViewById(R.id.closeBtn)
 
         labelInput.addTextChangedListener {
-            if(it!!.isNotEmpty())
+            if (it!!.isNotEmpty())
                 labelLayout.error = null
         }
         caloriesInput.addTextChangedListener {
-            if(it!!.isNotEmpty())
+            if (it!!.isNotEmpty())
                 caloriesLayout.error = null
         }
 
@@ -56,32 +54,28 @@ class AddFoodActivity : AppCompatActivity() {
             } else {
                 caloriesLayout.error = null
 
-                // Create a Foods object
-                val food = Foods(label, calories)
+                val food = Foods(0, label, calories, null)
 
-                // Insert the Foods object into the database
                 val dbHelper = DatabaseHelper(this)
                 val insertedId = dbHelper.addFood(food)
 
                 if (insertedId != -1L) {
-                    // Insertion successful
                     labelInput.text.clear()
                     caloriesInput.text.clear()
                     labelLayout.error = null
                     caloriesLayout.error = null
 
+                    val intent = Intent()
+                    intent.putExtra("foodAdded", true)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
                 } else {
-                    // Insertion failed
-
+                    // Handle insertion failure if necessary
                 }
             }
         }
-
         closeBtn.setOnClickListener {
-                finish()
-            }
-
-
-
+            finish()
+        }
     }
 }
