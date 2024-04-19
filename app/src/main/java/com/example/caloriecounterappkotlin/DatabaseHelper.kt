@@ -10,16 +10,18 @@ class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 1
-        private const val DATABASE_NAME = "FoodsDB"
+        private const val DATABASE_VERSION = 2
+        private const val DATABASE_NAME = "NewFoodsDB"
         private const val TABLE_NAME = "foods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_LABEL = "label"
         private const val COLUMN_CALORIES = "calories"
+        private const val COLUMN_DESCRIPTION = "description"
+        private const val COLUMN_CATEGORY = "category"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        val CREATE_FOODS_TABLE = "CREATE TABLE $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_LABEL TEXT, $COLUMN_CALORIES REAL)"
+        val CREATE_FOODS_TABLE = "CREATE TABLE $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_LABEL TEXT, $COLUMN_CALORIES REAL, $COLUMN_DESCRIPTION TEXT, $COLUMN_CATEGORY TEXT)"
         db.execSQL(CREATE_FOODS_TABLE)
     }
 
@@ -32,6 +34,8 @@ class DatabaseHelper(context: Context) :
         val values = ContentValues()
         values.put(COLUMN_LABEL, food.label)
         values.put(COLUMN_CALORIES, food.calories)
+        values.put(COLUMN_DESCRIPTION, food.description ?: "None")
+        values.put(COLUMN_CATEGORY, food.category.name) // Store category as string representation
         val db = this.writableDatabase
         val id = db.insert(TABLE_NAME, null, values)
         db.close()
@@ -50,7 +54,10 @@ class DatabaseHelper(context: Context) :
                     val id = it.getLong(it.getColumnIndex(COLUMN_ID))
                     val label = it.getString(it.getColumnIndex(COLUMN_LABEL))
                     val calories = it.getDouble(it.getColumnIndex(COLUMN_CALORIES))
-                    val food = Foods(id, label, calories, null, 0)
+                    val description = it.getString(it.getColumnIndex(COLUMN_DESCRIPTION))
+                    val categoryStr = it.getString(it.getColumnIndex(COLUMN_CATEGORY))
+                    val category = FoodCategory.valueOf(categoryStr) // Convert string back to enum
+                    val food = Foods(id, label, calories, description, category)
                     foods.add(food)
                 } while (it.moveToNext())
             }
@@ -66,12 +73,13 @@ class DatabaseHelper(context: Context) :
         val values = ContentValues().apply {
             put(COLUMN_LABEL, food.label)
             put(COLUMN_CALORIES, food.calories)
+            put(COLUMN_DESCRIPTION, food.description)
+            put(COLUMN_CATEGORY, food.category.name) // Store category as string representation
         }
         val updatedRows = db.update(TABLE_NAME, values, "$COLUMN_ID = ?", arrayOf(food.id.toString()))
         db.close()
         return updatedRows > 0
     }
-
 
     fun deleteFood(food: Foods): Boolean {
         val db = this.writableDatabase
@@ -80,4 +88,3 @@ class DatabaseHelper(context: Context) :
         return deletedRows > 0
     }
 }
-

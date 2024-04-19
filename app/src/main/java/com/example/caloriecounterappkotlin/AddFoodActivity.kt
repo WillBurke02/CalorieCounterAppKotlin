@@ -3,6 +3,7 @@ package com.example.caloriecounterappkotlin
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -46,11 +47,12 @@ class AddFoodActivity : AppCompatActivity() {
             val label = labelInput.text.toString()
             val calories = caloriesInput.text.toString().toDoubleOrNull()
             val category = when (categoryRadioGroup.checkedRadioButtonId) {
-                R.id.breakfastRadioButton -> 1
-                R.id.lunchRadioButton -> 2
-                R.id.dinnerRadioButton -> 3
-                else -> 0
+                R.id.breakfastRadioButton -> FoodCategory.BREAKFAST
+                R.id.lunchRadioButton -> FoodCategory.LUNCH
+                R.id.dinnerRadioButton -> FoodCategory.DINNER
+                else -> FoodCategory.UNKNOWN
             }
+            Log.d("CategoryDebug", "Category selected: $category")
 
             if (label.isEmpty()) {
                 labelLayout.error = "Please enter a valid label"
@@ -63,7 +65,7 @@ class AddFoodActivity : AppCompatActivity() {
             } else {
                 caloriesLayout.error = null
 
-                if (category == 0) {
+                if (category == FoodCategory.UNKNOWN) {
                     // No category selected
                     return@setOnClickListener
                 }

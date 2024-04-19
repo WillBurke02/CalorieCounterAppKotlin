@@ -108,8 +108,11 @@ class MainActivity : ComponentActivity() {
     private fun updateFood(food: Foods) {
         val intent = Intent(this, DetailedActivity::class.java)
         intent.putExtra("food", food)
+        // Pass the category along with the food object
+        intent.putExtra("category", food.category)
         updateFoodLauncher.launch(intent)
     }
+
 
     private fun refreshFoodsListAndDashboard() {
         foods.clear()

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.textfield.TextInputEditText
@@ -20,6 +21,8 @@ class DetailedActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var food: Foods
     private lateinit var rootView: ConstraintLayout
+    private lateinit var selectedCategoryTextView: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +36,27 @@ class DetailedActivity : AppCompatActivity() {
         closeBtn = findViewById(R.id.closeBtn)
         dbHelper = DatabaseHelper(this)
         rootView = findViewById(R.id.rootView)
+        selectedCategoryTextView = findViewById(R.id.selectedCategoryTextView)
 
         // Retrieve the food item passed from FoodAdapter
         food = intent.getSerializableExtra("food") as Foods
 
-        // Populate the EditText fields with food details
+// Populate the EditText fields with food details
         labelInput.setText(food.label)
         caloriesInput.setText(food.calories.toString())
         descriptionInput.setText(food.description)
+
+// Display the selected category
+        val category = intent.getSerializableExtra("category") as FoodCategory
+        val selectedCategory = when (category) {
+            FoodCategory.BREAKFAST -> "Breakfast"
+            FoodCategory.LUNCH -> "Lunch"
+            FoodCategory.DINNER -> "Dinner"
+            FoodCategory.UNKNOWN -> "Unknown"
+            else -> "WTF"
+        }
+        selectedCategoryTextView.text = "Selected Category: $selectedCategory"
+
 
         rootView.setOnClickListener {
             this.window.decorView.clearFocus()
@@ -55,12 +71,13 @@ class DetailedActivity : AppCompatActivity() {
             val description = descriptionInput.text.toString()
 
             if (label.isNotEmpty() && calories != null) {
-                val updatedFood = Foods(food.id, label, calories, description, 0)
+                val updatedFood = Foods(food.id, label, calories, description, food.category)
                 val updated = dbHelper.updateFood(updatedFood)
 
                 if (updated) {
                     val intent = Intent()
                     intent.putExtra("foodUpdated", true)
+                    intent.putExtra("category", updatedFood.category)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 } else {
@@ -70,6 +87,7 @@ class DetailedActivity : AppCompatActivity() {
                 // Handle invalid input if necessary
             }
         }
+
 
         closeBtn.setOnClickListener {
             finish()
