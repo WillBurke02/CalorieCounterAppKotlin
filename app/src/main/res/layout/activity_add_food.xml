@@ -26,6 +26,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <RadioGroup
+            android:id="@+id/categoryRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/addFoodBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionLayout">
+
+            <RadioButton
+                android:id="@+id/breakfastRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Breakfast" />
+
+            <RadioButton
+                android:id="@+id/lunchRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lunch" />
+
+            <RadioButton
+                android:id="@+id/dinnerRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Dinner" />
+        </RadioGroup>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/labelLayout"
             style="@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"

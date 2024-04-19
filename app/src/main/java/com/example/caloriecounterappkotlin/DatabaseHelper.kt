@@ -50,7 +50,7 @@ class DatabaseHelper(context: Context) :
                     val id = it.getLong(it.getColumnIndex(COLUMN_ID))
                     val label = it.getString(it.getColumnIndex(COLUMN_LABEL))
                     val calories = it.getDouble(it.getColumnIndex(COLUMN_CALORIES))
-                    val food = Foods(id, label, calories, " ")
+                    val food = Foods(id, label, calories, null, 0)
                     foods.add(food)
                 } while (it.moveToNext())
             }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
@@ -17,6 +18,7 @@ class AddFoodActivity : AppCompatActivity() {
     private lateinit var caloriesLayout: TextInputLayout
     private lateinit var addFoodBtn: Button
     private lateinit var closeBtn: ImageButton
+    private lateinit var categoryRadioGroup: RadioGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,7 @@ class AddFoodActivity : AppCompatActivity() {
         caloriesLayout = findViewById(R.id.calorieLayout)
         addFoodBtn = findViewById(R.id.addFoodBtn)
         closeBtn = findViewById(R.id.closeBtn)
+        categoryRadioGroup = findViewById(R.id.categoryRadioGroup)
 
         labelInput.addTextChangedListener {
             if (it!!.isNotEmpty())
@@ -42,6 +45,12 @@ class AddFoodActivity : AppCompatActivity() {
         addFoodBtn.setOnClickListener {
             val label = labelInput.text.toString()
             val calories = caloriesInput.text.toString().toDoubleOrNull()
+            val category = when (categoryRadioGroup.checkedRadioButtonId) {
+                R.id.breakfastRadioButton -> 1
+                R.id.lunchRadioButton -> 2
+                R.id.dinnerRadioButton -> 3
+                else -> 0
+            }
 
             if (label.isEmpty()) {
                 labelLayout.error = "Please enter a valid label"
@@ -54,7 +63,12 @@ class AddFoodActivity : AppCompatActivity() {
             } else {
                 caloriesLayout.error = null
 
-                val food = Foods(0, label, calories, null)
+                if (category == 0) {
+                    // No category selected
+                    return@setOnClickListener
+                }
+
+                val food = Foods(0, label, calories, null, category)
 
                 val dbHelper = DatabaseHelper(this)
                 val insertedId = dbHelper.addFood(food)

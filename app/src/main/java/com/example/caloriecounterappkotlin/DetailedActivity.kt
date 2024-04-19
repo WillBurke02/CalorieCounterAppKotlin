@@ -55,7 +55,7 @@ class DetailedActivity : AppCompatActivity() {
             val description = descriptionInput.text.toString()
 
             if (label.isNotEmpty() && calories != null) {
-                val updatedFood = Foods(food.id, label, calories, description)
+                val updatedFood = Foods(food.id, label, calories, description, 0)
                 val updated = dbHelper.updateFood(updatedFood)
 
                 if (updated) {

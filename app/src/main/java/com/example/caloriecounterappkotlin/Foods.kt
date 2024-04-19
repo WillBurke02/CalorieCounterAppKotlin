@@ -6,6 +6,7 @@ data class Foods(
     val id: Long,
     val label: String,
     val calories: Double,
-    val description: String?
+    val description: String?,
+    val category: Int
 ): Serializable {
 }
