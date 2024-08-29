@@ -53,7 +53,7 @@ class DetailedActivity : AppCompatActivity() {
             FoodCategory.LUNCH -> "Lunch"
             FoodCategory.DINNER -> "Dinner"
             FoodCategory.UNKNOWN -> "Unknown"
-            else -> "WTF"
+            else -> "TODO"
         }
         selectedCategoryTextView.text = "Selected Category: $selectedCategory"
 

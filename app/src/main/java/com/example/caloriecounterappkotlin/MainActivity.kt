@@ -57,14 +57,6 @@ class MainActivity : ComponentActivity() {
         // Initialize the RecyclerView
         val recyclerView: RecyclerView = findViewById(R.id.recyclerview)
 
-        // Find TextViews
-        balanceTextView = findViewById(R.id.balance)
-        budgetTextView = findViewById(R.id.budget)
-        expenseTextView = findViewById(R.id.expense)
-
-        //Find Button
-        addBtn = findViewById(R.id.addBtn)
-
         foods = dbHelper.getAllFoods()
 
         foodAdapter = FoodAdapter(foods)
@@ -74,6 +66,14 @@ class MainActivity : ComponentActivity() {
             adapter = foodAdapter
             layoutManager = linearLayoutManager
         }
+
+        // Find TextViews
+        balanceTextView = findViewById(R.id.balance)
+        budgetTextView = findViewById(R.id.budget)
+        expenseTextView = findViewById(R.id.expense)
+
+        //Find Button
+        addBtn = findViewById(R.id.addBtn)
 
         // swipe to remove
         val itemTouchHelper = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -119,11 +119,6 @@ class MainActivity : ComponentActivity() {
         foods.addAll(dbHelper.getAllFoods())
         foodAdapter.notifyDataSetChanged()
         updateDashboard()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // Not needed anymore as we're using ActivityResultLauncher
     }
 
     private fun undoDelete() {

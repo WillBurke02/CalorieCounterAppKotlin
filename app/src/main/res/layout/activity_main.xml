@@ -19,6 +19,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/circularProgressIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:progress="25"
+                app:indicatorColor="@color/pink"
+                app:indicatorSize="160dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:trackColor="@color/black"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="18dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
